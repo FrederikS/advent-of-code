@@ -1,8 +1,6 @@
 package codes.fdk.aoc.d01;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SequencedCollection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static codes.fdk.aoc.d01.DialRotation.LeftDialRotation;
 import static codes.fdk.aoc.d01.DialRotation.RightDialRotation;
@@ -11,67 +9,73 @@ public class Dial {
 
     private static final int MIN_NUMBER = 0;
     private static final int MAX_NUMBER = 99;
+    private static final int INITIAL_POINTER = 50;
 
-    private final SequencedCollection<DialState> states;
+    private final AtomicInteger pointer;
+    private final AtomicInteger zeroCounter = new AtomicInteger();
 
-    public Dial(SequencedCollection<DialState> states) {
-        this.states = new ArrayList<>(states);
+    public Dial() {
+        this.pointer = new AtomicInteger(INITIAL_POINTER);
     }
 
-    public static Dial initial() {
-        return new Dial(List.of(DialState.initial()));
-    }
-
-    public SequencedCollection<DialState> getStates() {
-        return states;
-    }
-
-    public int getPointer() {
-        return states.getLast().pointer();
+    public Dial(int pointer) {
+        this.pointer = new AtomicInteger(pointer);
     }
 
     public Dial processRotation(DialRotation rotation) {
-        states.add(applyRotation(rotation));
+        applyRotation(rotation);
         return this;
     }
 
-    private DialState applyRotation(DialRotation rotation) {
-        return switch (rotation) {
+    private void applyRotation(DialRotation rotation) {
+        switch (rotation) {
             case LeftDialRotation(int distance) -> rotateLeft(distance);
             case RightDialRotation(int distance) -> rotateRight(distance);
-        };
+        }
     }
 
-    private DialState rotateLeft(int distance) {
-        int pointer = states.getLast().pointer();
+    private void rotateLeft(int distance) {
         while (distance > 0) {
-            if (pointer == MIN_NUMBER) {
-                pointer = MAX_NUMBER;
-            } else {
-                pointer--;
-            }
+            turnLeft();
+            incrementCounterIfZero();
             distance--;
         }
-        return new DialState(pointer);
     }
 
-    private DialState rotateRight(int distance) {
-        int pointer = states.getLast().pointer();
+    private void turnLeft() {
+        var previous = this.pointer.getAndDecrement();
+        if (previous == MIN_NUMBER) {
+            this.pointer.set(MAX_NUMBER);
+        }
+    }
+
+    private void rotateRight(int distance) {
         while (distance > 0) {
-            if (pointer == MAX_NUMBER) {
-                pointer = MIN_NUMBER;
-            } else {
-                pointer++;
-            }
+            turnRight();
+            incrementCounterIfZero();
             distance--;
         }
-        return new DialState(pointer);
     }
 
-    long countZeros() {
-        return states.stream()
-                     .filter(state -> state.pointer() == 0)
-                     .count();
+    private void turnRight() {
+        var previous = this.pointer.getAndIncrement();
+        if (previous == MAX_NUMBER) {
+            this.pointer.set(MIN_NUMBER);
+        }
+    }
+
+    private void incrementCounterIfZero() {
+        if (this.pointer.get() == MIN_NUMBER) {
+            this.zeroCounter.getAndIncrement();
+        }
+    }
+
+    public int getPointer() {
+        return pointer.get();
+    }
+
+    public int getZeroCount() {
+        return zeroCounter.get();
     }
 
 }

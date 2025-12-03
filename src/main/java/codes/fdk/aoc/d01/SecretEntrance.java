@@ -23,12 +23,12 @@ public class SecretEntrance {
 
     static String determinePassword(Stream<String> dialRotations) {
         var dial = processDialRotations(dialRotations);
-        return String.valueOf(dial.countZeros());
+        return String.valueOf(dial.getZeroCount());
     }
 
     static Dial processDialRotations(Stream<String> rotations) {
         return rotations.map(DialRotation::of)
-                        .gather(Gatherers.fold(Dial::initial, Dial::processRotation))
+                        .gather(Gatherers.fold(Dial::new, Dial::processRotation))
                         .findFirst()
                         .orElseThrow();
     }
