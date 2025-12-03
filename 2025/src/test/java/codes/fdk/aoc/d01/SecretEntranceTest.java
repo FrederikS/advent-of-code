@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static codes.fdk.aoc.d01.SecretEntrance.determinePassword;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SecretEntranceTest {
@@ -23,7 +24,7 @@ class SecretEntranceTest {
 
     @Test
     void testDeterminePassword() {
-        assertThat(SecretEntrance.determinePassword(DIAL_ROTATIONS.stream())).isEqualTo("6");
+        assertThat(determinePassword(DIAL_ROTATIONS.stream())).isEqualTo("Part1: 3, Part2: 6");
     }
 
 }

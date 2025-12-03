@@ -3,7 +3,8 @@ package codes.fdk.aoc.d01;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Gatherers;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static codes.fdk.aoc.utils.Preconditions.requireNonNull;
@@ -22,15 +23,21 @@ public class SecretEntrance {
     }
 
     static String determinePassword(Stream<String> dialRotations) {
-        var dial = processDialRotations(dialRotations);
-        return String.valueOf(dial.getZeroCount());
+        var counterPart1 = new AtomicInteger();
+        var counterPart2 = new AtomicInteger();
+        var dial = new Dial();
+        dial.onRotationCompleted(incrementCounterIfZero(counterPart1));
+        dial.onPointerChanged(incrementCounterIfZero(counterPart2));
+        dial.processRotations(dialRotations.map(DialRotation::of));
+        return "Part1: %d, Part2: %d".formatted(counterPart1.get(), counterPart2.get());
     }
 
-    static Dial processDialRotations(Stream<String> rotations) {
-        return rotations.map(DialRotation::of)
-                        .gather(Gatherers.fold(Dial::new, Dial::processRotation))
-                        .findFirst()
-                        .orElseThrow();
+    private static Consumer<Integer> incrementCounterIfZero(AtomicInteger counter) {
+        return pointer -> {
+            if (pointer == 0) {
+                counter.getAndIncrement();
+            }
+        };
     }
 
 }

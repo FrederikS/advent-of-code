@@ -1,6 +1,8 @@
 package codes.fdk.aoc.d01;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static codes.fdk.aoc.d01.DialRotation.LeftDialRotation;
 import static codes.fdk.aoc.d01.DialRotation.RightDialRotation;
@@ -12,7 +14,9 @@ public class Dial {
     private static final int INITIAL_POINTER = 50;
 
     private final AtomicInteger pointer;
-    private final AtomicInteger zeroCounter = new AtomicInteger();
+
+    private Consumer<Integer> onPointerChanged = pointer -> {};
+    private Consumer<Integer> onRotationCompleted = pointer -> {};
 
     public Dial() {
         this.pointer = new AtomicInteger(INITIAL_POINTER);
@@ -22,12 +26,11 @@ public class Dial {
         this.pointer = new AtomicInteger(pointer);
     }
 
-    public Dial processRotation(DialRotation rotation) {
-        applyRotation(rotation);
-        return this;
+    public void processRotations(Stream<DialRotation> rotations) {
+        rotations.forEach(this::processRotation);
     }
 
-    private void applyRotation(DialRotation rotation) {
+    public void processRotation(DialRotation rotation) {
         switch (rotation) {
             case LeftDialRotation(int distance) -> rotateLeft(distance);
             case RightDialRotation(int distance) -> rotateRight(distance);
@@ -37,9 +40,9 @@ public class Dial {
     private void rotateLeft(int distance) {
         while (distance > 0) {
             turnLeft();
-            incrementCounterIfZero();
             distance--;
         }
+        this.onRotationCompleted.accept(this.pointer.get());
     }
 
     private void turnLeft() {
@@ -47,14 +50,15 @@ public class Dial {
         if (previous == MIN_NUMBER) {
             this.pointer.set(MAX_NUMBER);
         }
+        this.onPointerChanged.accept(this.pointer.get());
     }
 
     private void rotateRight(int distance) {
         while (distance > 0) {
             turnRight();
-            incrementCounterIfZero();
             distance--;
         }
+        this.onRotationCompleted.accept(this.pointer.get());
     }
 
     private void turnRight() {
@@ -62,20 +66,19 @@ public class Dial {
         if (previous == MAX_NUMBER) {
             this.pointer.set(MIN_NUMBER);
         }
-    }
-
-    private void incrementCounterIfZero() {
-        if (this.pointer.get() == MIN_NUMBER) {
-            this.zeroCounter.getAndIncrement();
-        }
+        this.onPointerChanged.accept(this.pointer.get());
     }
 
     public int getPointer() {
         return pointer.get();
     }
 
-    public int getZeroCount() {
-        return zeroCounter.get();
+    public void onPointerChanged(Consumer<Integer> onPointerChanged) {
+        this.onPointerChanged = onPointerChanged;
+    }
+
+    public void onRotationCompleted(Consumer<Integer> onRotationCompleted) {
+        this.onRotationCompleted = onRotationCompleted;
     }
 
 }
