@@ -1,5 +1,7 @@
 package codes.fdk.aoc.d02;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,9 +21,38 @@ class GiftShopTest {
             "38593856-38593862"
     );
 
-    @Test
-    void testFindSumOfInvalidIds() {
-        assertThat(GiftShop.findSumOfInvalidIds(RANGES.stream())).isEqualTo(1227775554L);
+    @Nested
+    class PartOne {
+
+        private IdRangeChecker checker;
+
+        @BeforeEach
+        void setUp() {
+            checker = new IdRangeChecker(new IdCheckerStrategyPartOne());
+        }
+
+        @Test
+        void testFindSumOfInvalidIds() {
+            assertThat(GiftShop.findSumOfInvalidIds(RANGES.stream(), checker)).isEqualTo(1227775554L);
+        }
+
+    }
+
+    @Nested
+    class PartTwo {
+
+        private IdRangeChecker checker;
+
+        @BeforeEach
+        void setUp() {
+            checker = new IdRangeChecker(new IdCheckerStrategyPartTwo());
+        }
+
+        @Test
+        void testFindSumOfInvalidIds() {
+            assertThat(GiftShop.findSumOfInvalidIds(RANGES.stream(), checker)).isEqualTo(4174379265L);
+        }
+
     }
 
 }
