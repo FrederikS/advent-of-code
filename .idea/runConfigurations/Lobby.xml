@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Lobby" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="codes.fdk.aoc.d03.Lobby" />
+    <module name="2025" />
+    <option name="PROGRAM_PARAMETERS" value="./2025/src/main/resources/d03/labels.txt" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="codes.fdk.aoc.d03.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
