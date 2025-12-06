@@ -1,19 +1,38 @@
 package codes.fdk.aoc.d03;
 
+import java.util.Stack;
+import java.util.stream.Stream;
+
 public class JoltageCalculator {
 
-    public static int calculateMax(String label) {
-        int max = 0;
-        for (int i = 0; i < label.length(); i++) {
-            char current = label.charAt(i);
-            for (int j = i + 1; j < label.length(); j++) {
-                char next = label.charAt(j);
-                int combined = Integer.parseInt("%c%c".formatted(current, next));
-                max = Math.max(max, combined);
+    public static long sumMaxJoltages(Stream<String> banks, int batteryCount) {
+        return banks.mapToLong(bank -> calculateMaxJoltage(bank, batteryCount)).sum();
+    }
+
+    public static long calculateMaxJoltage(String bank, int batteryCount) {
+        Stack s;
+        s.pop()
+        var builder = new StringBuilder();
+        int startIndex = 0;
+
+        for (int remaining = batteryCount; remaining > 0 ; remaining--) {
+            int endIndex = bank.length() - remaining;
+            char maxDigit = '0';
+            int maxIndex = startIndex;
+
+            for (int j = startIndex; j <= endIndex; j++) {
+                var battery = bank.charAt(j);
+                if (battery > maxDigit) {
+                    maxDigit = battery;
+                    maxIndex = j;
+                }
             }
+
+            builder.append(maxDigit);
+            startIndex = maxIndex + 1;
         }
 
-        return max;
+        return Long.parseLong(builder.toString());
     }
 
 }
