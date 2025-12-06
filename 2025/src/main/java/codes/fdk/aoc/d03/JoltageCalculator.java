@@ -1,6 +1,5 @@
 package codes.fdk.aoc.d03;
 
-import java.util.Stack;
 import java.util.stream.Stream;
 
 public class JoltageCalculator {
@@ -10,17 +9,14 @@ public class JoltageCalculator {
     }
 
     public static long calculateMaxJoltage(String bank, int batteryCount) {
-        Stack s;
-        s.pop()
         var builder = new StringBuilder();
         int startIndex = 0;
 
         for (int remaining = batteryCount; remaining > 0 ; remaining--) {
-            int endIndex = bank.length() - remaining;
             char maxDigit = '0';
             int maxIndex = startIndex;
 
-            for (int j = startIndex; j <= endIndex; j++) {
+            for (int j = startIndex; j <= bank.length() - remaining; j++) {
                 var battery = bank.charAt(j);
                 if (battery > maxDigit) {
                     maxDigit = battery;
