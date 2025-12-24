@@ -1,5 +1,6 @@
 package codes.fdk.aoc.d02;
 
+import codes.fdk.aoc.common.Range;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;

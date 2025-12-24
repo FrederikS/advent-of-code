@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Cafeteria" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="codes.fdk.aoc.d05.Cafeteria" />
+    <module name="2025" />
+    <option name="PROGRAM_PARAMETERS" value="./2025/src/main/resources/d05/ingredients.txt" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

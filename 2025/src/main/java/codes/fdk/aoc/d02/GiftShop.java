@@ -1,5 +1,6 @@
 package codes.fdk.aoc.d02;
 
+import codes.fdk.aoc.common.Range;
 import codes.fdk.aoc.utils.IOUtils;
 
 import java.util.Arrays;

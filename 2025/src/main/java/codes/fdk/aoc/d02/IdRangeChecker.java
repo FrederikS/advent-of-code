@@ -1,5 +1,7 @@
 package codes.fdk.aoc.d02;
 
+import codes.fdk.aoc.common.Range;
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;

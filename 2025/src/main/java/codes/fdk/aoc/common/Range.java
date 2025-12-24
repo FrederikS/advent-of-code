@@ -1,4 +1,4 @@
-package codes.fdk.aoc.d02;
+package codes.fdk.aoc.common;
 
 import static codes.fdk.aoc.utils.Preconditions.checkArgument;
 import static codes.fdk.aoc.utils.Preconditions.requireNonNull;
@@ -24,7 +24,11 @@ public record Range(long start, long end) {
     }
 
     public Range {
-        checkArgument(start < end, "Range start must be lower than range end.");
+        checkArgument(start <= end, "Range start must be lower than range end.");
+    }
+
+    public boolean isWithinRange(long value) {
+        return value >= start && value <= end;
     }
 
 }
