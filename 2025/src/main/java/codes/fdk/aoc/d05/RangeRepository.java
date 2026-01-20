@@ -12,4 +12,6 @@ public interface RangeRepository {
 
     long count();
 
+    Stream<Range> stream();
+
 }

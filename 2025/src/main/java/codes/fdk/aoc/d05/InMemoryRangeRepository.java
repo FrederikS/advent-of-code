@@ -3,9 +3,8 @@ package codes.fdk.aoc.d05;
 import codes.fdk.aoc.common.Range;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class InMemoryRangeRepository implements RangeRepository {
@@ -14,7 +13,21 @@ public class InMemoryRangeRepository implements RangeRepository {
 
     @Override
     public void save(Range range) {
-        ranges.add(range);
+        var mergeable = findMergeable(range);
+        if (mergeable.isPresent()) {
+            delete(mergeable.get());
+            save(mergeable.get().merge(range));
+        } else {
+            ranges.add(range);
+        }
+    }
+
+    private void delete(Range range) {
+        ranges.remove(range);
+    }
+
+    private Optional<Range> findMergeable(Range range) {
+        return ranges.stream().filter(range::isMergeableWith).findFirst();
     }
 
     @Override
@@ -25,6 +38,11 @@ public class InMemoryRangeRepository implements RangeRepository {
     @Override
     public long count() {
         return ranges.size();
+    }
+
+    @Override
+    public Stream<Range> stream() {
+        return ranges.stream();
     }
 
 }

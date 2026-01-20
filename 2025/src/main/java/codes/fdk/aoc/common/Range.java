@@ -13,6 +13,11 @@ public record Range(long start, long end) {
         return parseRange(value);
     }
 
+    public static boolean isRange(String value) {
+        requireNonNull(value, "Value must be non-null.");
+        return value.contains(DIVIDER);
+    }
+
     private static Range parseRange(String value) {
         var values = value.split(DIVIDER);
         checkArgument(values.length == 2, "Min and max value must be defined.");
@@ -29,6 +34,31 @@ public record Range(long start, long end) {
 
     public boolean isWithinRange(long value) {
         return value >= start && value <= end;
+    }
+
+    public boolean isMergeableWith(Range other) {
+        return isOverlappingWith(other) || isAdjacentTo(other) || isWithin(other);
+    }
+
+    public boolean isOverlappingWith(Range range) {
+        return range.start() >= start && range.start <= end
+               || range.end() >= start && range.end <= end;
+    }
+
+    public boolean isAdjacentTo(Range range) {
+        return range.start() == end + 1 || range.end() == start - 1;
+    }
+
+    public boolean isWithin(Range range) {
+        return range.start() > start && range.end() < end
+               || range.start() < start && range.end() > end;
+    }
+
+    public Range merge(Range other) {
+        if (isMergeableWith(other)) {
+            return new Range(Math.min(start, other.start), Math.max(end, other.end));
+        }
+        return this;
     }
 
 }

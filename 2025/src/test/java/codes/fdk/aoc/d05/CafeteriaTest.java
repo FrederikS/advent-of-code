@@ -1,12 +1,11 @@
 package codes.fdk.aoc.d05;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class CafeteriaTest {
 
@@ -35,7 +34,14 @@ class CafeteriaTest {
     void testFindNumberOfValuesInRange() {
         Cafeteria.storeRanges(INGREDIENTS.stream(), repository);
         var numberOfFreshIngredients = Cafeteria.findNumberOfValuesInRange(INGREDIENTS.stream(), repository);
-        Assertions.assertThat(numberOfFreshIngredients).isEqualTo(3);
+        assertThat(numberOfFreshIngredients).isEqualTo(3);
+    }
+
+    @Test
+    void testSumOfValuesInRange() {
+        Cafeteria.storeRanges(INGREDIENTS.stream(), repository);
+        var sumOfValuesInRange = Cafeteria.sumOfValuesInRange(repository);
+        assertThat(sumOfValuesInRange).isEqualTo(14L);
     }
 
 }

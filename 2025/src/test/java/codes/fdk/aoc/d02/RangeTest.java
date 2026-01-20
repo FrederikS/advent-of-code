@@ -27,4 +27,24 @@ class RangeTest {
         );
     }
 
+    @ParameterizedTest
+    @MethodSource("mergeArguments")
+    void testMerge(String value1, String value2, String valueExpected) {
+        var mergedRange = Range.of(value1).merge(Range.of(value2));
+        assertThat(mergedRange).isEqualTo(Range.of(valueExpected));
+    }
+
+    private static Stream<Arguments> mergeArguments() {
+        return Stream.of(
+                Arguments.of("3-5", "10-14", "3-5"),
+                Arguments.of("10-14", "12-18", "10-18"),
+                Arguments.of("16-20", "12-18", "12-20"),
+                Arguments.of("16-20", "20-22", "16-22"),
+                Arguments.of("16-20", "16-22", "16-22"),
+                Arguments.of("16-20", "21-26", "16-26"),
+                Arguments.of("16-20", "13-15", "13-20"),
+                Arguments.of("16-20", "12-28", "12-28")
+        );
+    }
+
 }

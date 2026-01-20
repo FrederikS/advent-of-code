@@ -19,6 +19,7 @@ public class Cafeteria {
         var repository = ServiceLoader.load(RangeRepository.class).findFirst().orElseThrow();
         IOUtils.processLinesFromFile(args[0], storeRanges(repository));
         IOUtils.processLinesFromFile(args[0], printNumberOfValuesInRange(repository));
+        IO.println("Sum:" + sumOfValuesInRange(repository));
     }
 
     private static Consumer<Stream<String>> storeRanges(RangeRepository repository) {
@@ -27,8 +28,8 @@ public class Cafeteria {
 
     static void storeRanges(Stream<String> lines, RangeRepository repository) {
         lines.takeWhile(not(String::isBlank))
-                .map(Range::of)
-                .forEach(repository::save);
+             .map(Range::of)
+             .forEach(repository::save);
     }
 
     private static Consumer<Stream<String>> printNumberOfValuesInRange(RangeRepository repository) {
@@ -36,10 +37,17 @@ public class Cafeteria {
     }
 
     static long findNumberOfValuesInRange(Stream<String> lines, RangeRepository repository) {
-        return lines.skip(repository.count() + 1)
-                .mapToLong(Long::parseLong)
-                .filter(repository::hasRangeFor)
-                .count();
+        return lines.dropWhile(Range::isRange)
+                    .skip(1)
+                    .mapToLong(Long::parseLong)
+                    .filter(repository::hasRangeFor)
+                    .count();
+    }
+
+    static long sumOfValuesInRange(RangeRepository repository) {
+        return repository.stream()
+                         .mapToLong(range -> range.end() + 1 - range.start())
+                         .sum();
     }
 
 }
